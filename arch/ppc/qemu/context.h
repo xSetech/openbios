@@ -33,3 +33,5 @@ extern unsigned long __boot_ctx;
 #define boot_ctx ((struct context *) phys_to_virt(__boot_ctx))
 
 #endif /* PPC_CONTEXT_H */
+
+void print_context(struct context *ctx);

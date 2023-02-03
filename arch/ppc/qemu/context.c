@@ -266,6 +266,24 @@ arch_init_program(void)
     return 0;
 }
 
+void print_context(struct context *ctx) {
+    printk("_sp: %lx\n", ctx->_sp);
+    printk("return_addr: %lx\n", ctx->return_addr);
+    printk("sp: %lx\n", ctx->sp);
+    printk("pc: %lx\n", ctx->pc);
+
+    int i;
+    for (i = 0; i < 34; i++) {
+        printk("regs[%d]: %lx\n", i, ctx->regs[i]);
+    }
+
+    printk("REG_R3: %lx\n", ctx->regs[REG_R3]);
+    printk("REG_R4: %lx\n", ctx->regs[REG_R4]);
+    printk("REG_R5: %lx\n", ctx->regs[REG_R5]);
+    printk("REG_R6: %lx\n", ctx->regs[REG_R6]);
+    printk("REG_R7: %lx\n", ctx->regs[REG_R7]);
+}
+
 /* Switch to another context. */
 struct context *switch_to(struct context *ctx)
 {
@@ -273,7 +291,8 @@ struct context *switch_to(struct context *ctx)
     struct context *ret;
     unsigned int lr;
 
-    debug("switching to new context:\n");
+    debug("switching to new context!\n");
+    print_context(ctx);
     save = __context;
     __context = ctx;
 
