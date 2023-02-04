@@ -1,2 +1,2 @@
-ODIRS= /Users/setech/Src/Gits/qemu/roms/openbios/obj-ppc
+ODIRS= /Users/setech/Src/Gits/openbios/obj-ppc
 TARGETS= ppc

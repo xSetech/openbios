@@ -5,4 +5,4 @@ AS_FLAGS=-fintegrated-as --target=powerpc64le-linux-gnu -m32 -mcpu=powerpc -msof
 HOSTARCH?=amd64
 CROSSCFLAGS=-DSWAP_ENDIANNESS -DNATIVE_BITWIDTH_SMALLER_THAN_HOST_BITWIDTH
 VERSION="1.1"
-SRCDIR=/Users/setech/Src/Gits/qemu/roms/openbios
+SRCDIR=/Users/setech/Src/Gits/openbios
