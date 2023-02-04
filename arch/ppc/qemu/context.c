@@ -296,12 +296,24 @@ struct context *switch_to(struct context *ctx)
     save = __context;
     __context = ctx;
 
-    asm __volatile__ ("mflr %%r9\n\t"
-                      "stw %%r9, %0\n\t"
-                      "bl __switch_context\n\t"
-                      "lwz %%r9, %0\n\t"
-                      "mtlr %%r9\n\t" : "=m" (lr) : "m" (lr) : "%r9" );
-    
+    /* The following inline assembly performs the context switch. */
+    asm __volatile__ (
+        /* mflr instruction: Move from Link Register to r9 */
+        "mflr %%r9\n\t"
+
+        /* stw instruction: Store r9 to memory (lr) */
+        "stw %%r9, %0\n\t"
+
+        /* bl instruction: Branch to __switch_context and store return addr (lr) */
+        "bl __switch_context\n\t"
+
+        /* lwz instruction: Load memory (lr) to r9 */
+        "lwz %%r9, %0\n\t"
+
+        /* mtlr instruction: Move r9 to Link Register */
+        "mtlr %%r9\n\t" : "=m" (lr) : "m" (lr) : "%r9"
+    );
+
     ret = __context;
     __context = (struct context *)save;
     return ret;
