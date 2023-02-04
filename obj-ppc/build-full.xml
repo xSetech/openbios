@@ -1,0 +1,786 @@
+<?xml version="1.0"?>
+<xmlmake>
+  <project name="openbios">
+    <build base="kernel/build.xml">
+      <executable name="forthstrap" target="host">
+        <object source="dict.c"/>
+        <object source="bootstrap.c"/>
+        <object source="forth.c"/>
+        <object source="stack.c"/>
+      </executable>
+      <library name="bootstrap" type="static" target="target">
+        <object source="dict.c"/>
+        <object source="forth.c"/>
+        <object source="stack.c"/>
+      </library>
+    </build>
+    <build base="forth/build.xml">
+      <!-- don't change this order -->
+      <build base="bootstrap/build.xml">
+        <!--
+  build description for openbios forth bootstrap
+ 
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="bootstrap">
+          <object source="start.fs" target="forth"/>
+        </dictionary>
+        <dictionary name="openbios" init="bootstrap"/>
+      </build>
+      <build base="lib/build.xml">
+        <!--
+  build description for openbios forth library functions
+ 
+  Copyright (C) 2003-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="rstack.fs"/>
+          <object source="vocabulary.fs"/>
+          <object source="string.fs"/>
+          <object source="preprocessor.fs"/>
+          <object source="preinclude.fs"/>
+          <!-- FIXME dependencies -->
+          <object source="creation.fs"/>
+          <object source="split.fs"/>
+          <object source="lists.fs"/>
+          <object source="64bit.fs"/>
+          <object source="locals.fs"/>
+        </dictionary>
+      </build>
+      <build base="device/build.xml">
+        <!--
+  build description for open firmware device interface
+ 
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="structures.fs"/>
+          <object source="fcode.fs"/>
+          <object source="property.fs"/>
+          <object source="device.fs"/>
+          <object source="package.fs"/>
+          <object source="other.fs"/>
+          <object source="pathres.fs"/>
+          <object source="preof.fs"/>
+          <object source="font.fs"/>
+          <object source="logo.fs"/>
+          <object source="display.fs"/>
+          <object source="terminal.fs"/>
+          <object source="extra.fs"/>
+          <object source="feval.fs"/>
+          <object source="table.fs"/>
+          <object source="tree.fs"/>
+          <object source="builtin.fs"/>
+        </dictionary>
+      </build>
+      <build base="debugging/build.xml">
+        <!--
+  build description for forth debugging command group
+ 
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="client.fs"/>
+          <object source="fcode.fs"/>
+          <object source="firmware.fs"/>
+          <object source="see.fs"/>
+        </dictionary>
+      </build>
+      <build base="admin/build.xml">
+        <!--
+  build description for forth administrative command group
+ 
+  Copyright (C) 2003-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="devices.fs"/>
+          <object source="nvram.fs"/>
+          <object source="callback.fs"/>
+          <object source="help.fs"/>
+          <object source="iocontrol.fs"/>
+          <object source="banner.fs"/>
+          <object source="reset.fs"/>
+          <object source="power.fs"/>
+          <object source="script.fs"/>
+          <object source="security.fs"/>
+          <object source="selftest.fs"/>
+          <object source="userboot.fs"/>
+        </dictionary>
+      </build>
+      <build base="util/build.xml">
+        <!--
+  build description for OpenBIOS utility functions
+  
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="util.fs"/>
+          <object source="pci.fs"/>
+          <!-- We don't want/need these at the moment
+  <object source="apic.fs"/>
+  -->
+        </dictionary>
+      </build>
+      <build base="packages/build.xml">
+        <!--
+  build description for Open Firmware support packages
+ 
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="packages.fs"/>
+          <object source="deblocker.fs" condition="PKG_DEBLOCKER"/>
+          <object source="disklabel.fs" condition="PKG_DISKLABEL"/>
+          <object source="terminal-emulator.fs" condition="PKG_TERM_EMUL"/>
+          <object source="obp-tftp.fs" condition="OBP_TFTP"/>
+        </dictionary>
+      </build>
+      <build base="system/build.xml">
+        <!--
+  build description for openbios system bindings
+ 
+  Copyright (C) 2004-2005 by Stefan Reinauer
+  See the file "COPYING" for further information about
+  the copyright and warranty status of this work.
+  -->
+        <dictionary name="openbios" target="forth">
+          <object source="main.fs"/>
+          <object source="ciface.fs"/>
+        </dictionary>
+      </build>
+    </build>
+    <build base="libc/build.xml">
+      <library name="libc" type="static" target="target">
+        <object source="ctype.c"/>
+        <object source="diskio.c"/>
+        <object source="extra.c"/>
+        <object source="misc.c"/>
+        <object source="string.c"/>
+        <object source="vsprintf.c"/>
+      </library>
+    </build>
+    <build base="libgcc/build.xml">
+      <library name="gcc" type="static" target="target">
+        <object source="ashldi3.c"/>
+        <object source="ashrdi3.c"/>
+        <object source="__lshrdi3.c"/>
+        <object source="__divdi3.c"/>
+        <object source="__udivdi3.c"/>
+        <object source="__udivmoddi4.c"/>
+        <object source="__umoddi3.c"/>
+        <object source="crtsavres.S" condition="PPC"/>
+        <!-- CONDITION="CONFIG_64BITS" -->
+        <object source="__divti3.c" condition="SPARC64"/>
+        <object source="__udivti3.c" condition="SPARC64"/>
+        <object source="__udivmodti4.c" condition="SPARC64"/>
+        <object source="__umodti3.c" condition="SPARC64"/>
+        <object source="multi3.c" condition="SPARC64"/>
+        <object source="__negti2.c" condition="SPARC64"/>
+      </library>
+    </build>
+    <build base="libopenbios/build.xml">
+      <library name="openbios" type="static" target="target">
+        <object source="aout_load.c" condition="LOADER_AOUT"/>
+        <object source="bindings.c"/>
+        <object source="bootcode_load.c" condition="LOADER_BOOTCODE"/>
+        <object source="bootinfo_load.c" condition="LOADER_BOOTINFO"/>
+        <object source="client.c"/>
+        <object source="console.c"/>
+        <object source="elf_info.c"/>
+        <object source="elf_load.c" condition="LOADER_ELF"/>
+        <object source="font_8x8.c" condition="FONT_8X8"/>
+        <object source="font_8x16.c" condition="FONT_8X16"/>
+        <object source="fcode_load.c" condition="LOADER_FCODE"/>
+        <object source="forth_load.c" condition="LOADER_FORTH"/>
+        <object source="init.c"/>
+        <object source="initprogram.c"/>
+        <object source="ipchecksum.c"/>
+        <object source="load.c"/>
+        <object source="linuxbios_info.c" condition="LINUXBIOS"/>
+        <object source="ofmem_common.c" condition="OFMEM"/>
+        <object source="prep_load.c" condition="LOADER_PREP"/>
+        <object source="xcoff_load.c" condition="LOADER_XCOFF"/>
+        <object source="video_common.c"/>
+      </library>
+      <dictionary name="openbios" target="forth">
+        <object source="clib.fs"/>
+        <object source="helpers.fs"/>
+      </dictionary>
+    </build>
+    <build base="packages/build.xml">
+      <library name="packages" type="static" target="target">
+        <object source="bootinfo-loader.c" condition="LOADER_BOOTINFO"/>
+        <object source="cmdline.c" condition="CMDLINE"/>
+        <object source="deblocker.c" condition="DEBLOCKER"/>
+        <object source="disk-label.c" condition="DISK_LABEL"/>
+        <object source="elf-loader.c" condition="LOADER_ELF"/>
+        <object source="init.c"/>
+        <object source="mac-parts.c" condition="MAC_PARTS"/>
+        <object source="nvram.c"/>
+        <object source="pc-parts.c" condition="PC_PARTS"/>
+        <object source="sun-parts.c" condition="SUN_PARTS"/>
+        <object source="molvideo.c" condition="MOL"/>
+        <object source="xcoff-loader.c" condition="LOADER_XCOFF"/>
+      </library>
+      <dictionary name="openbios" target="forth">
+        <object source="cmdline.fs"/>
+        <object source="disk-label.fs"/>
+      </dictionary>
+    </build>
+    <build base="drivers/build.xml">
+      <library name="drivers" type="static" target="target">
+        <object source="pci.c" condition="DRIVER_PCI"/>
+        <object source="pci_database.c" condition="DRIVER_PCI"/>
+        <object source="ide.c" condition="DRIVER_IDE"/>
+        <object source="timer.c" condition="DRIVER_IDE"/>
+        <object source="kbd.c" condition="DRIVER_ADB"/>
+        <object source="adb_bus.c" condition="DRIVER_ADB"/>
+        <object source="adb_kbd.c" condition="DRIVER_ADB"/>
+        <object source="adb_mouse.c" condition="DRIVER_ADB"/>
+        <object source="cuda.c" condition="DRIVER_ADB"/>
+        <object source="pmu.c" condition="DRIVER_ADB"/>
+        <object source="floppy.c" condition="DRIVER_FLOPPY"/>
+        <object source="iommu.c" condition="DRIVER_SBUS"/>
+        <object source="sbus.c" condition="DRIVER_SBUS"/>
+        <object source="esp.c" condition="DRIVER_ESP"/>
+        <object source="obio.c" condition="DRIVER_OBIO"/>
+        <object source="vga_load_regs.c" condition="DRIVER_VGA"/>
+        <object source="vga_set_mode.c" condition="DRIVER_VGA"/>
+        <object source="macio.c" condition="DRIVER_MACIO"/>
+        <object source="pc_kbd.c" condition="DRIVER_PC_KBD"/>
+        <object source="pc_serial.c" condition="DRIVER_PC_SERIAL"/>
+        <object source="escc.c" condition="DRIVER_ESCC"/>
+        <object source="fw_cfg.c" condition="DRIVER_FW_CFG"/>
+        <object source="usb.c" condition="DRIVER_USB"/>
+        <object source="usbhid.c" condition="USB_HID"/>
+        <object source="usbohci.c" condition="DRIVER_USB"/>
+        <object source="usbohci_rh.c" condition="DRIVER_USB"/>
+        <object source="lsi.c" condition="DRIVER_LSI_53C810"/>
+        <object source="virtio.c" condition="DRIVER_VIRTIO_BLK"/>
+      </library>
+      <dictionary name="openbios" target="forth">
+        <object source="pci.fs" condition="DRIVER_PCI"/>
+        <object source="sbus.fs" condition="DRIVER_SBUS"/>
+        <object source="esp.fs" condition="DRIVER_ESP"/>
+      </dictionary>
+      <fcode source="tcx.fs" name="QEMU,tcx.bin" condition="DRIVER_SBUS"/>
+      <fcode source="cgthree.fs" name="QEMU,cgthree.bin" condition="DRIVER_SBUS"/>
+      <fcode source="vga.fs" name="QEMU,VGA.bin" condition="DRIVER_VGA"/>
+    </build>
+    <build base="fs/build.xml">
+      <library name="fs" type="static" target="target">
+        <object source="ioglue.c"/>
+      </library>
+      <build base="grubfs/build.xml">
+        <library name="fs" type="static" target="target">
+          <object source="grubfs_fs.c"/>
+          <object source="fsys_ext2fs.c" condition="FSYS_EXT2FS" flags="-DFSYS_EXT2FS -fno-strict-aliasing"/>
+          <object source="fsys_fat.c" condition="FSYS_FAT" flags="-DFSYS_FAT -fno-strict-aliasing"/>
+          <object source="fsys_jfs.c" condition="FSYS_JFS" flags="-DFSYS_JFS -fno-strict-aliasing"/>
+          <object source="fsys_minix.c" condition="FSYS_MINIX" flags="-DFSYS_MINIX -fno-strict-aliasing"/>
+          <object source="fsys_reiserfs.c" condition="FSYS_REISERFS" flags="-DFSYS_REISERFS -fno-strict-aliasing"/>
+          <object source="fsys_xfs.c" condition="FSYS_XFS" flags="-DFSYS_XFS -fno-strict-aliasing"/>
+          <object source="fsys_ufs.c" condition="FSYS_UFS" flags="-DFSYS_UFS -fno-strict-aliasing"/>
+          <object source="fsys_ffs.c" condition="FSYS_FFS" flags="-DFSYS_FFS -fno-strict-aliasing"/>
+          <object source="fsys_vstafs.c" condition="FSYS_VSTAFS" flags="-DFSYS_VSTAFS -fno-strict-aliasing"/>
+          <object source="fsys_iso9660.c" condition="FSYS_ISO9660" flags="-DFSYS_ISO9660 -fno-strict-aliasing"/>
+          <object source="fsys_ntfs.c" condition="FSYS_NTFS" flags="-DFSYS_NTFS -fno-strict-aliasing"/>
+          <object source="fsys_affs.c" condition="FSYS_AFFS" flags="-DFSYS_AFFS -fno-strict-aliasing"/>
+        </library>
+      </build>
+      <build base="hfs/build.xml">
+        <library name="fs" type="static" target="target">
+          <object source="block.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="btree.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="data.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="file.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="hfs.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="low.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="medium.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="node.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="record.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="volume.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+          <object source="hfs_fs.c" flags="-I$(SRCDIR)/fs/hfs/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFS"/>
+        </library>
+      </build>
+      <build base="hfsplus/build.xml">
+        <library name="fs" type="static" target="target">
+          <object source="hfsp_blockiter.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="hfsp_btree.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="libhfsp.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="hfsp_record.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="hfsp_unicode.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="hfsp_volume.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+          <object source="hfsp_fs.c" flags="-I$(SRCDIR)/fs/hfsplus/include -I$(SRCDIR)/fs/ -fno-strict-aliasing" condition="HFSP"/>
+        </library>
+      </build>
+      <build base="iso9660/build.xml">
+        <library name="fs" type="static" target="target">
+          <object source="iso9660_fs.c" condition="ISO9660"/>
+          <object source="iso9660_close.c" condition="ISO9660"/>
+          <object source="iso9660_closedir.c" condition="ISO9660"/>
+          <object source="iso9660_lseek.c" condition="ISO9660"/>
+          <object source="iso9660_mount.c" condition="ISO9660"/>
+          <object source="iso9660_open.c" condition="ISO9660"/>
+          <object source="iso9660_opendir.c" condition="ISO9660"/>
+          <object source="iso9660_read.c" condition="ISO9660"/>
+          <object source="iso9660_readdir.c" condition="ISO9660"/>
+        </library>
+      </build>
+      <build base="ext2/build.xml">
+        <library name="fs" type="static" target="target">
+          <object source="ext2_close.c" condition="EXT2"/>
+          <object source="ext2_closedir.c" condition="EXT2"/>
+          <object source="ext2_fs.c" condition="EXT2"/>
+          <object source="ext2_lseek.c" condition="EXT2"/>
+          <object source="ext2_mount.c" condition="EXT2"/>
+          <object source="ext2_open.c" condition="EXT2"/>
+          <object source="ext2_opendir.c" condition="EXT2"/>
+          <object source="ext2_read.c" condition="EXT2"/>
+          <object source="ext2_readdir.c" condition="EXT2"/>
+          <object source="ext2_utils.c" condition="EXT2"/>
+        </library>
+      </build>
+    </build>
+    <build base="arch/build.xml">
+      <build condition="X86" base="x86/build.xml">
+        <dictionary name="openbios-x86" init="openbios">
+          <object source="init.fs" target="forth"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <library name="x86" type="static" target="target">
+          <object source="openbios.c"/>
+          <object source="exception.c"/>
+          <object source="console.c"/>
+          <object source="lib.c"/>
+          <object source="boot.c"/>
+          <object source="context.c"/>
+          <object source="linux_load.c"/>
+          <object source="segment.c"/>
+          <object source="sys_info.c"/>
+          <object source="entry.S"/>
+          <object source="xbox/console.c" condition="XBOX"/>
+          <object source="xbox/methods.c" condition="XBOX"/>
+        </library>
+        <executable name="openbios.multiboot" target="target" condition="IMAGE_ELF_MULTIBOOT">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/x86/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-multiboot.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="multiboot.c"/>
+          <external-object source="libx86.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+        <executable name="openbios-plain.elf" target="target" condition="IMAGE_ELF">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/x86/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-plain.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="plainboot.c"/>
+          <external-object source="libx86.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+        <!-- HACK ALERT -->
+        <executable name="target/include/static-dict.h" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule>
+	$(call quiet-command,$(ODIR)/forthstrap -x -D $@ -d $&lt; &lt;/dev/null, "  GEN   $(TARGET_DIR)$@")</rule>
+          <external-object source="openbios-x86.dict"/>
+        </executable>
+        <executable name="target/arch/x86/builtin.o" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule> $(SRCDIR)/arch/x86/builtin.c $(ODIR)/target/include/static-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/x86/builtin.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <!-- END OF HACK ALERT -->
+        <executable name="openbios-builtin.elf" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/x86/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-builtin.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <external-object source="target/arch/x86/builtin.o"/>
+          <external-object source="libx86.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+      </build>
+      <build condition="AMD64" base="amd64/build.xml">
+        <dictionary name="openbios-amd64" init="openbios" target="forth">
+          <object source="init.fs"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+      </build>
+      <build condition="PPC" base="ppc/build.xml">
+        <dictionary name="openbios-briq" init="openbios" target="forth" condition="BRIQ">
+          <object source="ppc.fs"/>
+          <object source="briq/tree.fs"/>
+          <object source="briq/briq.fs"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <dictionary name="openbios-pearpc" init="openbios" target="forth" condition="PEARPC">
+          <object source="ppc.fs"/>
+          <object source="pearpc/tree.fs"/>
+          <object source="pearpc/pearpc.fs"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <dictionary name="openbios-qemu" init="openbios" target="forth" condition="QEMU">
+          <object source="ppc.fs"/>
+          <object source="qemu/tree.fs"/>
+          <object source="qemu/qemu.fs"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <dictionary name="openbios-mol" init="openbios" target="forth" condition="MOL">
+          <object source="ppc.fs"/>
+          <object source="mol/tree.fs"/>
+          <object source="mol/mol.fs"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <!-- HACK ALERT -->
+        <executable name="target/include/briq-dict.h" target="target" condition="BRIQ">
+          <rule>
+	$(call quiet-command,true, "  GEN   $(TARGET_DIR)$@")
+	@echo "static const char forth_dictionary[] = {" &gt; $@
+	@cat $&lt; | hexdump -ve '1/0 "\t" 8/1 "0x%02x, " 1/0 "\n"' \
+					| sed 's/0x  ,//g' &gt;&gt; $@
+	@echo "};" &gt;&gt; $@</rule>
+          <external-object source="openbios-briq.dict"/>
+        </executable>
+        <executable name="target/arch/ppc/briq/kernel.o" target="target" condition="BRIQ">
+          <rule> $(SRCDIR)/arch/ppc/briq/kernel.c $(ODIR)/target/include/static-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/ppc/briq/kernel.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <executable name="target/include/pearpc-dict.h" target="target" condition="PEARPC">
+          <rule>
+	$(call quiet-command,true, "  GEN   $(TARGET_DIR)$@")
+	@echo "static const char forth_dictionary[] = {" &gt; $@
+	@cat $&lt; | hexdump -ve '1/0 "\t" 8/1 "0x%02x, " 1/0 "\n"' \
+					| sed 's/0x  ,//g' &gt;&gt; $@
+	@echo "};" &gt;&gt; $@</rule>
+          <external-object source="openbios-pearpc.dict"/>
+        </executable>
+        <executable name="target/arch/ppc/pearpc/kernel.o" target="target" condition="PEARPC">
+          <rule> $(SRCDIR)/arch/ppc/pearpc/kernel.c $(ODIR)/target/include/pearpc-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/ppc/pearpc/kernel.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <executable name="target/include/qemu-dict.h" target="target" condition="QEMU">
+          <rule>
+	$(call quiet-command,$(ODIR)/forthstrap -x -D $@ -d $&lt; &lt;/dev/null, "  GEN   $(TARGET_DIR)$@")</rule>
+          <external-object source="openbios-qemu.dict"/>
+        </executable>
+        <executable name="target/arch/ppc/qemu/kernel.o" target="target" condition="QEMU">
+          <rule> $(SRCDIR)/arch/ppc/qemu/kernel.c $(ODIR)/target/include/qemu-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/ppc/qemu/kernel.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <executable name="target/include/mol-dict.h" target="target" condition="MOL">
+          <rule>
+	$(call quiet-command,true, "  GEN   $(TARGET_DIR)$@")
+	@echo "static const char forth_dictionary[] = {" &gt; $@
+	@cat $&lt; | hexdump -ve '1/0 "\t" 8/1 "0x%02x, " 1/0 "\n"' \
+					| sed 's/0x  ,//g' &gt;&gt; $@
+	@echo "};" &gt;&gt; $@</rule>
+          <external-object source="openbios-mol.dict"/>
+        </executable>
+        <executable name="target/arch/ppc/mol/kernel.o" target="target" condition="MOL">
+          <rule>
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/ppc/mol/kernel.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <!-- END OF HACK ALERT -->
+        <library name="briq" target="target" type="static" condition="BRIQ">
+          <object source="misc.S"/>
+          <object source="ofmem.c"/>
+          <object source="briq/briq.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="briq/init.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <external-object source="target/arch/ppc/briq/kernel.o"/>
+          <object source="briq/main.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="briq/methods.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="briq/tree.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="briq/vfd.c" flags="-I$(SRCDIR)/arch/ppc"/>
+        </library>
+        <library name="pearpc" target="target" type="static" condition="PEARPC">
+          <object source="misc.S"/>
+          <object source="ofmem.c"/>
+          <object source="pearpc/pearpc.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="pearpc/init.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <external-object source="target/arch/ppc/pearpc/kernel.o"/>
+          <object source="pearpc/main.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="pearpc/methods.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="pearpc/tree.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="pearpc/vfd.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <!-- taken from mol: generalize -->
+          <object source="pearpc/console.c" flags="-I$(SRCDIR)/arch/ppc"/>
+        </library>
+        <library name="qemu" target="target" type="static" condition="QEMU">
+          <object source="qemu/ofmem.c"/>
+          <object source="qemu/qemu.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="qemu/init.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <external-object source="target/arch/ppc/qemu/kernel.o"/>
+          <object source="qemu/main.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="qemu/methods.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="qemu/vfd.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="qemu/console.c" flags="-I$(SRCDIR)/arch/ppc"/>
+        </library>
+        <library name="mol" target="target" type="static" condition="MOL">
+          <object source="misc.S"/>
+          <object source="ofmem.c"/>
+          <object source="mol/init.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/main.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/mol.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/console.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/osi-blk.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/osi-scsi.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/pseudodisk.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/methods.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/prom.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <object source="mol/tree.c" flags="-I$(SRCDIR)/arch/ppc"/>
+          <external-object source="target/arch/ppc/mol/kernel.o"/>
+        </library>
+        <executable name="openbios-briq.elf" target="target" condition="BRIQ">
+          <rule>
+	$(call quiet-command,$(LD) -g -Ttext=0x01e01000 -Bstatic $^ $(shell $(CC) -print-libgcc-file-name) -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-briq.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="start.S"/>
+          <object source="timebase.S"/>
+          <external-object source="libbriq.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+        </executable>
+        <executable name="openbios-pearpc.elf" target="target" condition="PEARPC">
+          <rule>
+	$(call quiet-command,$(LD) -g -Ttext=0x01e01000 -Bstatic $^ $(shell $(CC) -print-libgcc-file-name) -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-pearpc.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="start.S"/>
+          <object source="timebase.S"/>
+          <external-object source="libpearpc.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+        </executable>
+        <executable name="openbios-qemu.elf" target="target" condition="QEMU">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/$(ARCH)/qemu/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-qemu.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="qemu/start.S"/>
+          <object source="qemu/switch.S"/>
+          <object source="qemu/context.c"/>
+          <object source="timebase.S"/>
+          <external-object source="libqemu.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+        <executable name="openbios-mol.elf" target="target" condition="MOL">
+          <rule>
+	$(call quiet-command,$(LD) -g -Ttext=0x01e01000 -Bstatic $^ $(shell $(CC) -print-libgcc-file-name) -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-mol.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="start.S"/>
+          <external-object source="libmol.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+        </executable>
+      </build>
+      <build condition="IPF" base="ia64/build.xml">
+        <dictionary name="openbios-ia64" init="openbios" target="forth">
+          <object source="init.fs"/>
+        </dictionary>
+      </build>
+      <build condition="HOST_UNIX" base="unix/build.xml">
+        <dictionary name="openbios-unix" init="openbios" target="forth">
+          <object source="tree.fs"/>
+        </dictionary>
+        <executable name="openbios-unix" target="target">
+          <rule>
+	$(call quiet-command,$(CC) $(CFLAGS) -rdynamic $(LIBDL_LDFLAGS) -o $@ $^,"  LINK  $(TARGET_DIR)$@")
+  </rule>
+          <object source="unix.c" flags="-DBOOTSTRAP"/>
+          <object source="boot.c" flags="-DBOOTSTRAP"/>
+          <object source="blk.c" flags="-DBOOTSTRAP"/>
+          <object source="plugins.c" flags="-DBOOTSTRAP" condition="PLUGINS"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+        </executable>
+      </build>
+      <build condition="SPARC32" base="sparc32/build.xml">
+        <dictionary name="openbios-sparc32" init="openbios">
+          <object source="cpu.fs" target="forth"/>
+          <object source="tree.fs" target="forth"/>
+          <object source="init.fs" target="forth"/>
+          <object source="QEMU,tcx.bin" target="fcode" condition="DRIVER_SBUS"/>
+          <object source="QEMU,cgthree.bin" target="fcode" condition="DRIVER_SBUS"/>
+        </dictionary>
+        <library name="sparc32" type="static" target="target">
+          <object source="openbios.c"/>
+          <object source="console.c"/>
+          <object source="lib.c"/>
+          <object source="boot.c"/>
+          <object source="context.c"/>
+          <object source="switch.S"/>
+          <object source="udiv.S"/>
+          <object source="linux_load.c"/>
+          <object source="sys_info.c"/>
+          <object source="ofmem_sparc32.c"/>
+          <object source="romvec.c"/>
+          <object source="call-romvec.S"/>
+          <object source="entry.S"/>
+          <object source="vectors.S"/>
+        </library>
+        <executable name="openbios-plain.elf" target="target" condition="IMAGE_ELF">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/sparc32/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-plain.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="plainboot.c"/>
+          <external-object source="libsparc32.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+        <!-- HACK ALERT -->
+        <executable name="target/include/static-dict.h" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule>
+	$(call quiet-command,$(ODIR)/forthstrap -x -D $@ -d $&lt; &lt;/dev/null, "  GEN   $(TARGET_DIR)$@")</rule>
+          <external-object source="openbios-sparc32.dict"/>
+        </executable>
+        <executable name="target/arch/sparc32/builtin.o" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule> $(SRCDIR)/arch/sparc32/builtin.c $(ODIR)/target/include/static-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/sparc32/builtin.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <!-- END OF HACK ALERT -->
+        <executable name="openbios-builtin.elf" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/sparc32/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-builtin.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <external-object source="target/arch/sparc32/builtin.o"/>
+          <external-object source="libsparc32.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+      </build>
+      <build condition="SPARC64" base="sparc64/build.xml">
+        <dictionary name="openbios-sparc64" init="openbios">
+          <object source="cpu.fs" target="forth"/>
+          <object source="tree.fs" target="forth"/>
+          <object source="init.fs" target="forth"/>
+          <object source="QEMU,VGA.bin" target="fcode" condition="DRIVER_VGA"/>
+        </dictionary>
+        <library name="sparc64" type="static" target="target">
+          <object source="openbios.c"/>
+          <object source="console.c"/>
+          <object source="lib.c"/>
+          <object source="boot.c"/>
+          <object source="context.c"/>
+          <object source="switch.S"/>
+          <object source="linux_load.c"/>
+          <object source="sys_info.c"/>
+          <object source="ofmem_sparc64.c"/>
+          <object source="entry.S"/>
+          <object source="vectors.S"/>
+          <object source="call-client.S"/>
+        </library>
+        <executable name="openbios-plain.elf" target="target" condition="IMAGE_ELF">
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -T $(SRCDIR)/arch/sparc64/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-plain.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <object source="plainboot.c"/>
+          <external-object source="libsparc64.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+        <!-- HACK ALERT -->
+        <executable name="target/include/static-dict.h" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule>
+	$(call quiet-command,$(ODIR)/forthstrap -x -D $@ -d $&lt; &lt;/dev/null, "  GEN   $(TARGET_DIR)$@")</rule>
+          <external-object source="openbios-sparc64.dict"/>
+        </executable>
+        <executable name="target/arch/sparc64/builtin.o" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <rule> $(SRCDIR)/arch/sparc64/builtin.c $(ODIR)/target/include/static-dict.h
+	$(call quiet-command,$(CC) $$EXTRACFLAGS $(CFLAGS) $(INCLUDES) -c -o $@ $(SRCDIR)/arch/sparc64/builtin.c, "  CC    $(TARGET_DIR)$@")</rule>
+        </executable>
+        <!-- END OF HACK ALERT -->
+        <executable name="openbios-builtin.elf" target="target" condition="IMAGE_ELF_EMBEDDED">
+          <!-- We use -N to reduce the file size by 1M -->
+          <rule>
+	$(call quiet-command,$(LD) --warn-common -N -T $(SRCDIR)/arch/sparc64/ldscript -o $@.nostrip --whole-archive $^,"  LINK  $(TARGET_DIR)$@")
+	$(call quiet-command,$(NM) $@.nostrip | sort &gt; $(ODIR)/openbios-builtin.syms,"  GEN   $(TARGET_DIR)$@.syms")
+	$(call quiet-command,$(STRIP) $@.nostrip -o $@,"  STRIP $(TARGET_DIR)$@")</rule>
+          <external-object source="target/arch/sparc64/builtin.o"/>
+          <external-object source="libsparc64.a"/>
+          <external-object source="libbootstrap.a"/>
+          <external-object source="libopenbios.a"/>
+          <external-object source="libpackages.a"/>
+          <external-object source="libdrivers.a"/>
+          <external-object source="libfs.a"/>
+          <external-object source="liblibc.a"/>
+          <external-object source="libgcc.a"/>
+        </executable>
+      </build>
+    </build>
+  </project>
+</xmlmake>

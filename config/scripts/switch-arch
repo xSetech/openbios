@@ -266,7 +266,7 @@ for ARCH in $arch_list; do
         select_prefix powerpc powerpc64
 
         # clang
-        CFLAGS="--target=powerpc64le-linux-gnu -m32 -mcpu=powerpc -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe -Wa,-a32"
+        CFLAGS="--target=powerpc64le-linux-gnu -m32 -mcpu=powerpc -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe"
         AS_FLAGS="-fintegrated-as ${CFLAGS}"
 
         # if [ "$unix" = "no" ]; then
@@ -283,7 +283,7 @@ for ARCH in $arch_list; do
         select_prefix powerpc64
 
         # clang
-        CFLAGS="--target=powerpc64le-linux-gnu -m64 -mcpu=970 -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe -Wa,-a64"
+        CFLAGS="--target=powerpc64le-linux-gnu -m64 -mcpu=970 -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe"
         AS_FLAGS="-fintegrated-as ${CFLAGS}"
 
         # 970 cpu is used in all 64-bit Macs but disable altivec
