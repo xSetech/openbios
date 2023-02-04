@@ -118,7 +118,7 @@ select_prefix()
 
         for TARGET in $TARGETS
         do
-            if type ${TARGET}gcc > /dev/null 2>&1
+            if type ${TARGET}ld > /dev/null 2>&1
             then
                 return
             fi
@@ -264,22 +264,31 @@ for ARCH in $arch_list; do
 
         ppc)
         select_prefix powerpc powerpc64
-        if [ "$unix" = "no" ]; then
-            # 604 cpu includes support for PReP as well as Mac
-            CFLAGS="-m32 -mcpu=604 -msoft-float -fno-builtin-bcopy -fno-builtin-log2"
-            AS_FLAGS="-m32"
-        else
-            CFLAGS="-fno-builtin"
-            AS_FLAGS=
-        fi
+
+        # clang
+        CFLAGS="--target=powerpc64le-linux-gnu -m32 -mcpu=powerpc -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe -Wa,-a32"
+        AS_FLAGS="-fintegrated-as ${CFLAGS}"
+
+        # if [ "$unix" = "no" ]; then
+        #     # 604 cpu includes support for PReP as well as Mac
+        #     CFLAGS="-m32 -mcpu=604 -msoft-float -fno-builtin-bcopy -fno-builtin-log2"
+        #     AS_FLAGS="-m32"
+        # else
+        #     CFLAGS="-fno-builtin"
+        #     AS_FLAGS=
+        # fi
         ;;
 
         ppc64)
         select_prefix powerpc64
 
+        # clang
+        CFLAGS="--target=powerpc64le-linux-gnu -m64 -mcpu=970 -msoft-float -fno-builtin -mbig-endian -mno-altivec -mno-vsx -mno-mma -mno-spe -Wa,-a64"
+        AS_FLAGS="-fintegrated-as ${CFLAGS}"
+
         # 970 cpu is used in all 64-bit Macs but disable altivec
-        CFLAGS="-mcpu=970 -mno-altivec -Wa,-a64 -m64 -msoft-float -fno-builtin"
-        AS_FLAGS="-Wa,-a64"
+        # CFLAGS="-mcpu=970 -mno-altivec -Wa,-a64 -m64 -msoft-float -fno-builtin"
+        # AS_FLAGS="-Wa,-a64"
         ;;
 
         sparc32)
